@@ -1,0 +1,26 @@
+# Software Information
+display_name = "McTaylor"
+display_version = "0.00"
+description = "TODO"
+authors = "Jesse Talavera"
+categories = "Emulator"
+corename = "${MELONDSDS_NAME}"
+license = "MIT"
+
+# Hardware Information
+manufacturer = "Taylor"
+systemname = "Taylor"
+systemid = "taylor"
+
+# Libretro Features
+cheats = "false"
+core_options = "false"
+hw_render = "false"
+input_descriptors = "false"
+is_experimental = "false"
+libretro_saves = "false"
+load_subsystem = "false"
+needs_fullpath = "false"
+savestate = "false"
+single_purpose = "true"
+supports_no_game = "true"
