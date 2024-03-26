@@ -7,7 +7,7 @@ option(ENABLE_DYNAMIC "Build with dynamic library support, if supported by the t
 option(ENABLE_EGL "Build with EGL support, if supported by the target." OFF)
 option(ENABLE_NETWORKING "Build with networking support, if supported by the target." ON)
 option(ENABLE_SCCACHE "Build with sccache instead of ccache, if available." OFF)
-option(ENABLE_ZLIB "Build with zlib support, if supported by the target." ON)
+option(ENABLE_ZLIB "Build with zlib support, if supported by the target." OFF)
 option(ENABLE_GLSM_DEBUG "Enable debug output for GLSM." OFF)
 
 if (ENABLE_SCCACHE)
