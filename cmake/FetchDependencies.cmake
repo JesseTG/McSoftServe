@@ -37,8 +37,10 @@ function(fetch_dependency name default_url default_tag)
     FetchContent_GetProperties(${name})
 endfunction()
 
+list(APPEND CMAKE_MODULE_PATH "${FETCHCONTENT_BASE_DIR}/embed-binaries-src/cmake")
 fetch_dependency(libretro-common "https://github.com/libretro/libretro-common" "fce57fd")
 fetch_dependency(pntr "https://github.com/RobLoach/pntr" "ead3ead")
 fetch_dependency(pntr_nuklear "https://github.com/RobLoach/pntr_nuklear" "6884cf4")
+fetch_dependency(embed-binaries "https://github.com/andoalon/embed-binaries.git" "21f28ca")
 
-FetchContent_MakeAvailable(libretro-common pntr pntr_nuklear)
+FetchContent_MakeAvailable(libretro-common pntr pntr_nuklear embed-binaries)

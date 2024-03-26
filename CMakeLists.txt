@@ -13,8 +13,11 @@ project("McTaylor"
         LANGUAGES C CXX)
 
 include(FetchContent)
+include(CheckSymbolExists)
 include(cmake/FetchDependencies.cmake)
+include(cmake/ConfigureFeatures.cmake)
 include(cmake/libretro-common.cmake)
+include(embed-binaries)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -23,6 +26,14 @@ add_library(mctaylor_libretro MODULE
     libretro.cpp
     pntr/pntr.c
 )
+
+embed_binaries(libretro-assets
+    ASSET
+        NAME "mctaylor_freezer"
+        PATH "assets/freezer.wav"
+        BYTE_TYPE char
+)
+
 
 target_include_directories(mctaylor_libretro SYSTEM PUBLIC
     "${libretro-common_SOURCE_DIR}/include"

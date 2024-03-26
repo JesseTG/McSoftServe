@@ -2,6 +2,8 @@ add_library(libretro-common STATIC)
 target_include_directories(libretro-common PUBLIC "${libretro-common_SOURCE_DIR}/include")
 
 target_sources(libretro-common PRIVATE
+    ${libretro-common_SOURCE_DIR}/audio/audio_mix.c
+    ${libretro-common_SOURCE_DIR}/audio/audio_mixer.c
     ${libretro-common_SOURCE_DIR}/audio/conversion/float_to_s16.c
     ${libretro-common_SOURCE_DIR}/audio/conversion/s16_to_float.c
     ${libretro-common_SOURCE_DIR}/audio/resampler/audio_resampler.c
