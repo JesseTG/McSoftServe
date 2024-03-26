@@ -38,6 +38,7 @@ embed_binaries(libretro-assets
 target_include_directories(mctaylor_libretro SYSTEM PUBLIC
     "${libretro-common_SOURCE_DIR}/include"
     "${pntr_SOURCE_DIR}"
+    "${pntr_nuklear_SOURCE_DIR}/include"
 )
 
 # libretro cores do not start with "lib"
@@ -64,7 +65,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "(.+)?
     # This has tripped me up before, so I'm forcing it to be an error.
 endif()
 
-target_link_libraries(mctaylor_libretro PUBLIC libretro-common)
+target_link_libraries(mctaylor_libretro PUBLIC libretro-common pntr pntr_nuklear libretro-assets)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     message(STATUS "Defining DEBUG in mctaylor_libretro and libretro-common targets")
