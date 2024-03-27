@@ -6,6 +6,8 @@
 #include <memory>
 
 #include <libretro.h>
+#include <pntr.h>
+#include <pntr_nuklear.h>
 #include <retro_assert.h>
 #include <audio/audio_mixer.h>
 #include <audio/conversion/float_to_s16.h>
@@ -41,10 +43,22 @@ struct CoreState
         _freezerVoice = audio_mixer_play(_freezerSound, true, 1.0f, "sinc", RESAMPLER_QUALITY_HIGHEST, nullptr);
 
         retro_assert(_freezerVoice != nullptr);
+
+        _font = pntr_load_font_default();
+        retro_assert(_font != nullptr);
+
+        _nk = pntr_load_nuklear(_font);
+        retro_assert(_nk != nullptr);
     }
 
     ~CoreState() noexcept
     {
+        pntr_unload_nuklear(_nk);
+        _nk = nullptr;
+
+        pntr_unload_font(_font);
+        _font = nullptr;
+
         audio_mixer_stop(_freezerVoice);
         _freezerVoice = nullptr;
 
@@ -64,6 +78,8 @@ struct CoreState
 private:
     audio_mixer_sound_t* _freezerSound = nullptr;
     audio_mixer_voice_t* _freezerVoice = nullptr;
+    pntr_font* _font = nullptr;
+    nk_context* _nk = nullptr;
 };
 
 namespace

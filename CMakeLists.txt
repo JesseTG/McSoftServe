@@ -30,6 +30,15 @@ add_library(mctaylor_libretro MODULE
 add_common_definitions(mctaylor_libretro)
 add_common_definitions(libretro-common)
 
+add_compile_definitions(
+    PNTR_ENABLE_DEFAULT_FONT
+    PNTR_ENABLE_FILTER_SMOOTH
+    PNTR_ENABLE_MATH
+    PNTR_ENABLE_VARGS
+    PNTR_PIXELFORMAT_RGBA
+    STB_IMAGE_STATIC # To avoid using any dynamically-linked STB implementations
+)
+
 embed_binaries(libretro-assets
     ASSET
         NAME "mctaylor_freezer"
