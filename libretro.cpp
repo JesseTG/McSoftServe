@@ -236,7 +236,7 @@ void CoreState::Run()
     array<float, SAMPLE_RATE * 2 / 60> buffer {};
     array<int16_t, SAMPLE_RATE * 2 / 60> outbuffer {};
 
-    audio_mixer_mix(buffer.data(), buffer.size() / 2, 6.0f, true);
+    audio_mixer_mix(buffer.data(), buffer.size() / 2, 1.0f, false);
     convert_float_to_s16(outbuffer.data(), buffer.data(), buffer.size());
 
     _video_refresh(framebuffer.data(), SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH * sizeof(uint32_t));
