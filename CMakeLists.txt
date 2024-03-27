@@ -33,6 +33,7 @@ add_common_definitions(libretro-common)
 add_compile_definitions(
     PNTR_ENABLE_DEFAULT_FONT
     PNTR_ENABLE_FILTER_SMOOTH
+    PNTR_ENABLE_JPEG
     PNTR_ENABLE_MATH
     PNTR_ENABLE_VARGS
     PNTR_PIXELFORMAT_RGBA
@@ -46,6 +47,9 @@ embed_binaries(libretro-assets
     ASSET
         NAME "mctaylor_bg"
         PATH "assets/bg-steel.png"
+    ASSET
+        NAME "mctaylor_bg_matte"
+        PATH "assets/bg-matte.jpg"
 )
 
 

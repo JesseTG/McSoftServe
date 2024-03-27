@@ -14,13 +14,15 @@
 
 #include <embedded/mctaylor_freezer.h>
 #include <embedded/mctaylor_bg.h>
+#include <embedded/mctaylor_bg_matte.h>
 
 using std::array;
 
 constexpr int SAMPLE_RATE = 44100;
 constexpr int SCREEN_WIDTH = 1366;
 constexpr int SCREEN_HEIGHT = 768;
-constexpr nk_panel_flags WINDOW_FLAGS = NK_WINDOW_BACKGROUND;
+constexpr int MATTE_PANEL_OFFSET = 70;
+constexpr nk_panel_flags WINDOW_FLAGS = static_cast<nk_panel_flags>(NK_WINDOW_BACKGROUND | NK_WINDOW_NO_SCROLLBAR);
 constexpr struct nk_rect WINDOW_BOUNDS = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
 struct MachineState
@@ -50,10 +52,15 @@ struct CoreState
         _nk = pntr_load_nuklear(_font);
         retro_assert(_nk != nullptr);
 
-        _steel_bg = pntr_load_image_from_memory(PNTR_IMAGE_TYPE_PNG, embedded_mctaylor_bg, sizeof(embedded_mctaylor_bg));
+        // pntr_load_image_from_memory detects the image type from the data,
+        // so I'm leaving it as PNTR_IMAGE_TYPE_UNKNOWN
+        _steel_bg = pntr_load_image_from_memory(PNTR_IMAGE_TYPE_UNKNOWN, embedded_mctaylor_bg, sizeof(embedded_mctaylor_bg));
         retro_assert(_steel_bg != nullptr);
-
         _nk_steel_bg = pntr_image_nk(_steel_bg);
+
+        _matte_bg = pntr_load_image_from_memory(PNTR_IMAGE_TYPE_UNKNOWN, embedded_mctaylor_bg_matte, sizeof(embedded_mctaylor_bg_matte));
+        retro_assert(_matte_bg != nullptr);
+        _nk_matte_bg = pntr_image_nk(_matte_bg);
 
         _framebuffer = pntr_new_image(SCREEN_WIDTH, SCREEN_HEIGHT);
         retro_assert(_framebuffer != nullptr);
@@ -63,12 +70,22 @@ struct CoreState
             .type = NK_STYLE_ITEM_IMAGE,
             .data = { .image = _nk_steel_bg }
         };
+        _nk->style.window.header.padding = {0, 0};
+        _nk->style.window.header.spacing = {0, 0};
+        _nk->style.window.padding = {0, 0};
+        _nk->style.window.spacing = {0, 0};
+        _nk->style.window.group_padding = {0, 0};
+        _nk->style.window.border = 0;
     }
 
     ~CoreState() noexcept
     {
         pntr_unload_image(_framebuffer);
         _framebuffer = nullptr;
+
+        pntr_unload_image(_matte_bg);
+        _matte_bg = nullptr;
+        _nk_matte_bg.handle.ptr = nullptr;
 
         pntr_unload_image(_steel_bg);
         _steel_bg = nullptr;
@@ -103,7 +120,9 @@ private:
     nk_context* _nk = nullptr;
 
     struct nk_image _nk_steel_bg {};
+    struct nk_image _nk_matte_bg {};
     pntr_image* _steel_bg = nullptr;
+    pntr_image* _matte_bg = nullptr;
     pntr_image* _framebuffer = nullptr;
 };
 
@@ -280,6 +299,9 @@ void CoreState::Run()
 
     if (nk_begin(_nk, "", WINDOW_BOUNDS, WINDOW_FLAGS)) {
 
+        nk_layout_row_static(_nk, MATTE_PANEL_OFFSET, SCREEN_WIDTH, 1);
+        nk_layout_row_static(_nk, SCREEN_HEIGHT - MATTE_PANEL_OFFSET, SCREEN_WIDTH, 1);
+        nk_image(_nk, _nk_matte_bg);
         if (nk_button_label(_nk, "Button")) {
             _log(RETRO_LOG_INFO, "Hello World!\n");
         }
