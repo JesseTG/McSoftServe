@@ -27,6 +27,9 @@ add_library(mctaylor_libretro MODULE
     pntr/pntr.c
 )
 
+add_common_definitions(mctaylor_libretro)
+add_common_definitions(libretro-common)
+
 embed_binaries(libretro-assets
     ASSET
         NAME "mctaylor_freezer"

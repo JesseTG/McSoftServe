@@ -251,6 +251,8 @@ function(add_common_definitions TARGET)
     if (SWITCH)
         target_compile_definitions(${TARGET} PUBLIC SWITCH __SWITCH__)
     endif ()
+
+    target_compile_definitions(${TARGET} PUBLIC HAVE_RWAV)
 endfunction()
 
 # TODO: Detect if SSL is available; if so, define HAVE_SSL

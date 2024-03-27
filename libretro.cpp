@@ -1,11 +1,69 @@
 // MIT-licensed, see LICENSE in the root directory.
 
 #include <array>
+#include <cstddef>
+#include <cstring>
+#include <memory>
+
 #include <libretro.h>
+#include <retro_assert.h>
+#include <audio/audio_mixer.h>
+#include <audio/conversion/float_to_s16.h>
+#include <formats/rwav.h>
+
+#include <embedded/mctaylor_freezer.h>
+
+using std::array;
+
+constexpr int SAMPLE_RATE = 44100;
+constexpr int SCREEN_WIDTH = 1366;
+constexpr int SCREEN_HEIGHT = 768;
 
 struct MachineState
 {
     retro_time_t elapsed {};
+};
+
+struct CoreState
+{
+    CoreState() noexcept
+    {
+        audio_mixer_init(SAMPLE_RATE);
+        _freezerSound = audio_mixer_load_wav(
+            (void*)embedded_mctaylor_freezer,
+            sizeof(embedded_mctaylor_freezer),
+            "sinc",
+            RESAMPLER_QUALITY_HIGHEST
+        );
+
+        retro_assert(_freezerSound != nullptr);
+
+        _freezerVoice = audio_mixer_play(_freezerSound, true, 1.0f, "sinc", RESAMPLER_QUALITY_HIGHEST, nullptr);
+
+        retro_assert(_freezerVoice != nullptr);
+    }
+
+    ~CoreState() noexcept
+    {
+        audio_mixer_stop(_freezerVoice);
+        _freezerVoice = nullptr;
+
+        audio_mixer_destroy(_freezerSound);
+        _freezerSound = nullptr;
+
+        audio_mixer_done();
+    }
+    CoreState(const CoreState&) = delete;
+    CoreState& operator=(const CoreState&) = delete;
+    CoreState(CoreState&&) = delete;
+    CoreState& operator=(CoreState&&) = delete;
+
+    const bool initialized = true;
+
+    void Run();
+private:
+    audio_mixer_sound_t* _freezerSound = nullptr;
+    audio_mixer_voice_t* _freezerVoice = nullptr;
 };
 
 namespace
@@ -17,6 +75,8 @@ namespace
     retro_input_state_t _input_state = nullptr;
     retro_environment_t _environment = nullptr;
     retro_log_printf_t _log = nullptr;
+    alignas(CoreState) std::array<std::byte, sizeof(CoreState)> CoreStateBuffer;
+    CoreState& Core = *reinterpret_cast<CoreState*>(CoreStateBuffer.data());
 
     static constexpr std::array ERRORS = {
         "NO_FAULT_FOUND",
@@ -62,18 +122,28 @@ RETRO_API void retro_set_environment(retro_environment_t env)
     _environment(RETRO_ENVIRONMENT_SET_SUPPORT_NO_GAME, &yes);
     _environment(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &log);
     _environment(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &format);
-    _log = log.log;
 
-    _log(RETRO_LOG_DEBUG, "Loggin' in the air\n");
+    if (!_log && log.log)
+    {
+        _log = log.log;
+        _log(RETRO_LOG_DEBUG, "Loggin' in the air\n");
+    }
 }
 
-/* Library global initialization/deinitialization. */
+
 RETRO_API void retro_init()
 {
+    CoreStateBuffer.fill({});
+    new(&CoreStateBuffer) CoreState(); // placement-new the CoreState
+    retro_assert(Core.initialized);
 }
+
 
 RETRO_API void retro_deinit()
 {
+    Core.~CoreState(); // placement delete
+    CoreStateBuffer.fill({});
+    retro_assert(!Core.initialized);
 }
 
 
@@ -92,12 +162,12 @@ RETRO_API void retro_get_system_info(retro_system_info *info)
 
 RETRO_API void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-    info->geometry.max_width = 1920;
-    info->geometry.max_width = 1080;
-    info->geometry.base_height = 1920;
-    info->geometry.base_width = 1080;
+    info->geometry.base_width = SCREEN_WIDTH;
+    info->geometry.base_height = SCREEN_HEIGHT;
+    info->geometry.max_width = SCREEN_WIDTH;
+    info->geometry.max_height = SCREEN_HEIGHT;
     info->timing.fps = 60.0;
-    info->timing.sample_rate = 44100.0;
+    info->timing.sample_rate = SAMPLE_RATE;
 }
 
 RETRO_API void retro_set_controller_port_device(unsigned, unsigned) {}
@@ -153,9 +223,22 @@ RETRO_API size_t retro_get_memory_size(unsigned id)
     return 0;
 }
 
+std::array<uint32_t, SCREEN_WIDTH * SCREEN_HEIGHT> framebuffer {};
+
 RETRO_API void retro_run()
 {
-    // TODO: Render the background
+    Core.Run();
+}
+
+void CoreState::Run()
+{
     _input_poll();
-    //_video_refresh(nullptr, 480, 640, 480 * 4);
+    array<float, SAMPLE_RATE * 2 / 60> buffer {};
+    array<int16_t, SAMPLE_RATE * 2 / 60> outbuffer {};
+
+    audio_mixer_mix(buffer.data(), buffer.size() / 2, 6.0f, true);
+    convert_float_to_s16(outbuffer.data(), buffer.data(), buffer.size());
+
+    _video_refresh(framebuffer.data(), SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH * sizeof(uint32_t));
+    _audio_sample_batch(outbuffer.data(), outbuffer.size() / 2);
 }
