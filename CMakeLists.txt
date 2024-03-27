@@ -43,7 +43,9 @@ embed_binaries(libretro-assets
     ASSET
         NAME "mctaylor_freezer"
         PATH "assets/freezer.wav"
-        BYTE_TYPE char
+    ASSET
+        NAME "mctaylor_bg"
+        PATH "assets/bg-steel.png"
 )
 
 

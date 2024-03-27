@@ -11,15 +11,17 @@
 #include <retro_assert.h>
 #include <audio/audio_mixer.h>
 #include <audio/conversion/float_to_s16.h>
-#include <formats/rwav.h>
 
 #include <embedded/mctaylor_freezer.h>
+#include <embedded/mctaylor_bg.h>
 
 using std::array;
 
 constexpr int SAMPLE_RATE = 44100;
 constexpr int SCREEN_WIDTH = 1366;
 constexpr int SCREEN_HEIGHT = 768;
+constexpr nk_panel_flags WINDOW_FLAGS = NK_WINDOW_BACKGROUND;
+constexpr struct nk_rect WINDOW_BOUNDS = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
 struct MachineState
 {
@@ -37,11 +39,9 @@ struct CoreState
             "sinc",
             RESAMPLER_QUALITY_HIGHEST
         );
-
         retro_assert(_freezerSound != nullptr);
 
         _freezerVoice = audio_mixer_play(_freezerSound, true, 1.0f, "sinc", RESAMPLER_QUALITY_HIGHEST, nullptr);
-
         retro_assert(_freezerVoice != nullptr);
 
         _font = pntr_load_font_default();
@@ -49,10 +49,31 @@ struct CoreState
 
         _nk = pntr_load_nuklear(_font);
         retro_assert(_nk != nullptr);
+
+        _steel_bg = pntr_load_image_from_memory(PNTR_IMAGE_TYPE_PNG, embedded_mctaylor_bg, sizeof(embedded_mctaylor_bg));
+        retro_assert(_steel_bg != nullptr);
+
+        _nk_steel_bg = pntr_image_nk(_steel_bg);
+
+        _framebuffer = pntr_new_image(SCREEN_WIDTH, SCREEN_HEIGHT);
+        retro_assert(_framebuffer != nullptr);
+
+        _nk->style.window.fixed_background.type = NK_STYLE_ITEM_IMAGE;
+        _nk->style.window.fixed_background = {
+            .type = NK_STYLE_ITEM_IMAGE,
+            .data = { .image = _nk_steel_bg }
+        };
     }
 
     ~CoreState() noexcept
     {
+        pntr_unload_image(_framebuffer);
+        _framebuffer = nullptr;
+
+        pntr_unload_image(_steel_bg);
+        _steel_bg = nullptr;
+        _nk_steel_bg.handle.ptr = nullptr;
+
         pntr_unload_nuklear(_nk);
         _nk = nullptr;
 
@@ -80,6 +101,10 @@ private:
     audio_mixer_voice_t* _freezerVoice = nullptr;
     pntr_font* _font = nullptr;
     nk_context* _nk = nullptr;
+
+    struct nk_image _nk_steel_bg {};
+    pntr_image* _steel_bg = nullptr;
+    pntr_image* _framebuffer = nullptr;
 };
 
 namespace
@@ -239,8 +264,6 @@ RETRO_API size_t retro_get_memory_size(unsigned id)
     return 0;
 }
 
-std::array<uint32_t, SCREEN_WIDTH * SCREEN_HEIGHT> framebuffer {};
-
 RETRO_API void retro_run()
 {
     Core.Run();
@@ -255,6 +278,15 @@ void CoreState::Run()
     audio_mixer_mix(buffer.data(), buffer.size() / 2, 1.0f, false);
     convert_float_to_s16(outbuffer.data(), buffer.data(), buffer.size());
 
-    _video_refresh(framebuffer.data(), SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH * sizeof(uint32_t));
+    if (nk_begin(_nk, "", WINDOW_BOUNDS, WINDOW_FLAGS)) {
+
+        if (nk_button_label(_nk, "Button")) {
+            _log(RETRO_LOG_INFO, "Hello World!\n");
+        }
+    }
+    nk_end(_nk);
+
+    pntr_draw_nuklear(_framebuffer, _nk);
+    _video_refresh(_framebuffer->data, SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH * sizeof(pntr_color));
     _audio_sample_batch(outbuffer.data(), outbuffer.size() / 2);
 }
