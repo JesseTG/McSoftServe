@@ -33,10 +33,9 @@ add_common_definitions(libretro-common)
 add_compile_definitions(
     PNTR_ENABLE_TTF
     PNTR_ENABLE_FILTER_SMOOTH
-    PNTR_ENABLE_JPEG
     PNTR_ENABLE_MATH
     PNTR_ENABLE_VARGS
-    PNTR_PIXELFORMAT_RGBA
+    PNTR_PIXELFORMAT_ARGB
     STB_IMAGE_STATIC # To avoid using any dynamically-linked STB implementations
 )
 
@@ -46,16 +45,10 @@ embed_binaries(libretro-assets
         PATH "assets/freezer.wav"
     ASSET
         NAME "mctaylor_bg"
-        PATH "assets/bg-steel.png"
-    ASSET
-        NAME "mctaylor_bg_matte"
-        PATH "assets/bg-matte.jpg"
+        PATH "assets/bg.png"
     ASSET
         NAME "mctaylor_lcd_font"
         PATH "assets/enhanced_led_board-7.ttf"
-    ASSET
-        NAME "mctaylor_panel"
-        PATH "assets/panel.png"
 )
 
 

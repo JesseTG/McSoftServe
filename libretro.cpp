@@ -14,9 +14,7 @@
 
 #include <embedded/mctaylor_freezer.h>
 #include <embedded/mctaylor_bg.h>
-#include <embedded/mctaylor_bg_matte.h>
 #include <embedded/mctaylor_lcd_font.h>
-#include <embedded/mctaylor_panel.h>
 
 using std::array;
 
@@ -59,15 +57,6 @@ struct CoreState
         _steel_bg = pntr_load_image_from_memory(PNTR_IMAGE_TYPE_UNKNOWN, embedded_mctaylor_bg, sizeof(embedded_mctaylor_bg));
         retro_assert(_steel_bg != nullptr);
         _nk_steel_bg = pntr_image_nk(_steel_bg);
-
-        _matte_bg = pntr_load_image_from_memory(PNTR_IMAGE_TYPE_UNKNOWN, embedded_mctaylor_bg_matte, sizeof(embedded_mctaylor_bg_matte));
-        retro_assert(_matte_bg != nullptr);
-        _nk_matte_bg = pntr_image_nk(_matte_bg);
-
-        _panel = pntr_load_image_from_memory(PNTR_IMAGE_TYPE_UNKNOWN, embedded_mctaylor_panel, sizeof(embedded_mctaylor_panel));
-        retro_assert(_panel != nullptr);
-        _nk_panel = pntr_image_nk(_panel);
-
         _framebuffer = pntr_new_image(SCREEN_WIDTH, SCREEN_HEIGHT);
         retro_assert(_framebuffer != nullptr);
 
@@ -88,14 +77,6 @@ struct CoreState
     {
         pntr_unload_image(_framebuffer);
         _framebuffer = nullptr;
-
-        pntr_unload_image(_matte_bg);
-        _matte_bg = nullptr;
-        _nk_matte_bg.handle.ptr = nullptr;
-
-        pntr_unload_image(_panel);
-        _panel = nullptr;
-        _nk_panel.handle.ptr = nullptr;
 
         pntr_unload_image(_steel_bg);
         _steel_bg = nullptr;
@@ -130,11 +111,7 @@ private:
     nk_context* _nk = nullptr;
 
     struct nk_image _nk_steel_bg {};
-    struct nk_image _nk_matte_bg {};
-    struct nk_image _nk_panel {};
     pntr_image* _steel_bg = nullptr;
-    pntr_image* _matte_bg = nullptr;
-    pntr_image* _panel = nullptr;
     pntr_image* _framebuffer = nullptr;
 };
 
@@ -310,13 +287,6 @@ void CoreState::Run()
     convert_float_to_s16(outbuffer.data(), buffer.data(), buffer.size());
 
     if (nk_begin(_nk, "", WINDOW_BOUNDS, WINDOW_FLAGS)) {
-
-        nk_layout_row_static(_nk, MATTE_PANEL_OFFSET, SCREEN_WIDTH, 1);
-        nk_layout_row_static(_nk, SCREEN_HEIGHT - MATTE_PANEL_OFFSET, SCREEN_WIDTH, 1);
-        nk_image(_nk, _nk_matte_bg);
-        if (nk_button_label(_nk, "Button")) {
-            _log(RETRO_LOG_INFO, "Hello World!\n");
-        }
     }
     nk_end(_nk);
 
