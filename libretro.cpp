@@ -15,6 +15,8 @@
 #include <embedded/mctaylor_freezer.h>
 #include <embedded/mctaylor_bg.h>
 #include <embedded/mctaylor_bg_matte.h>
+#include <embedded/mctaylor_lcd_font.h>
+#include <embedded/mctaylor_panel.h>
 
 using std::array;
 
@@ -46,7 +48,7 @@ struct CoreState
         _freezerVoice = audio_mixer_play(_freezerSound, true, 1.0f, "sinc", RESAMPLER_QUALITY_HIGHEST, nullptr);
         retro_assert(_freezerVoice != nullptr);
 
-        _font = pntr_load_font_default();
+        _font = pntr_load_font_ttf_from_memory(embedded_mctaylor_lcd_font, sizeof(embedded_mctaylor_lcd_font), 32);
         retro_assert(_font != nullptr);
 
         _nk = pntr_load_nuklear(_font);
@@ -61,6 +63,10 @@ struct CoreState
         _matte_bg = pntr_load_image_from_memory(PNTR_IMAGE_TYPE_UNKNOWN, embedded_mctaylor_bg_matte, sizeof(embedded_mctaylor_bg_matte));
         retro_assert(_matte_bg != nullptr);
         _nk_matte_bg = pntr_image_nk(_matte_bg);
+
+        _panel = pntr_load_image_from_memory(PNTR_IMAGE_TYPE_UNKNOWN, embedded_mctaylor_panel, sizeof(embedded_mctaylor_panel));
+        retro_assert(_panel != nullptr);
+        _nk_panel = pntr_image_nk(_panel);
 
         _framebuffer = pntr_new_image(SCREEN_WIDTH, SCREEN_HEIGHT);
         retro_assert(_framebuffer != nullptr);
@@ -86,6 +92,10 @@ struct CoreState
         pntr_unload_image(_matte_bg);
         _matte_bg = nullptr;
         _nk_matte_bg.handle.ptr = nullptr;
+
+        pntr_unload_image(_panel);
+        _panel = nullptr;
+        _nk_panel.handle.ptr = nullptr;
 
         pntr_unload_image(_steel_bg);
         _steel_bg = nullptr;
@@ -121,8 +131,10 @@ private:
 
     struct nk_image _nk_steel_bg {};
     struct nk_image _nk_matte_bg {};
+    struct nk_image _nk_panel {};
     pntr_image* _steel_bg = nullptr;
     pntr_image* _matte_bg = nullptr;
+    pntr_image* _panel = nullptr;
     pntr_image* _framebuffer = nullptr;
 };
 
