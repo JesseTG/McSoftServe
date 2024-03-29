@@ -214,17 +214,8 @@ namespace
     retro_input_state_t _input_state = nullptr;
     retro_environment_t _environment = nullptr;
     retro_log_printf_t _log = nullptr;
-    alignas(CoreState) std::array<std::byte, sizeof(CoreState)> CoreStateBuffer;
+    alignas(CoreState) std::array<uint8_t, sizeof(CoreState)> CoreStateBuffer;
     CoreState& Core = *reinterpret_cast<CoreState*>(CoreStateBuffer.data());
-
-    static constexpr std::array ERRORS = {
-        "NO_FAULT_FOUND",
-        "BEATER OVERLOAD",
-        "HPCO COMPRESSOR",
-        "PRODUCT DOOR OFF",
-        "HOPPER THERMISTOR FAIL / BAD",
-        "BARREL THERMISTOR FAIL / BAD",
-    };
 }
 
 RETRO_API void retro_set_video_refresh(retro_video_refresh_t refresh)

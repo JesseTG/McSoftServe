@@ -38,6 +38,7 @@ add_compile_definitions(
     PNTR_ENABLE_VARGS
     PNTR_PIXELFORMAT_ARGB
     STB_IMAGE_STATIC # To avoid using any dynamically-linked STB implementations
+    STBI_NO_THREAD_LOCALS
 )
 
 embed_binaries(libretro-assets
