@@ -32,8 +32,10 @@ constexpr int BUTTON_SIZE = 87;
 constexpr int MATTE_PANEL_OFFSET = 70;
 constexpr nk_panel_flags WINDOW_FLAGS = static_cast<nk_panel_flags>(NK_WINDOW_BACKGROUND | NK_WINDOW_NO_SCROLLBAR);
 constexpr struct nk_rect WINDOW_BOUNDS = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+constexpr struct nk_rect LCD_BOUNDS = {519, 320, 330, 132};
 constexpr std::array BUTTON_COLUMN_X = {84, 173, 261, 349, 930, 1107, 1196};
 constexpr std::array BUTTON_ROW_Y = {260, 312, 520, 551, 586, 620};
+constexpr int FONT_SIZE = 34;
 
 struct MachineState
 {
@@ -72,8 +74,9 @@ struct CoreState
         _freezerVoice = audio_mixer_play(_freezerSound, true, 1.0f, "sinc", RESAMPLER_QUALITY_HIGHEST, nullptr);
         retro_assert(_freezerVoice != nullptr);
 
-        _font = pntr_load_font_ttf_from_memory(embedded_mcsoftserve_lcd_font, sizeof(embedded_mcsoftserve_lcd_font), 32);
+        _font = pntr_load_font_ttf_from_memory(embedded_mcsoftserve_lcd_font, sizeof(embedded_mcsoftserve_lcd_font), FONT_SIZE);
         retro_assert(_font != nullptr);
+        _textHeight = pntr_measure_text_ex(_font, "X", 0).y;
 
         _nk = pntr_load_nuklear(_font);
         retro_assert(_nk != nullptr);
@@ -118,6 +121,9 @@ struct CoreState
 
         audio_mixer_stop(_freezerVoice);
         _freezerVoice = nullptr;
+
+        audio_mixer_stop(_beepVoice);
+        _beepVoice = nullptr;
 
         audio_mixer_destroy(_beepSound);
         _beepSound = nullptr;
@@ -180,8 +186,10 @@ private:
     audio_mixer_sound_t* _freezerSound = nullptr;
     audio_mixer_voice_t* _freezerVoice = nullptr;
     audio_mixer_sound_t* _beepSound = nullptr;
+    audio_mixer_voice_t* _beepVoice = nullptr;
     pntr_font* _font = nullptr;
     nk_context* _nk = nullptr;
+    int _textHeight = 0;
 
     struct nk_image _nk_steel_bg {};
     pntr_image* _steel_bg = nullptr;
@@ -399,73 +407,98 @@ void CoreState::Run()
     convert_float_to_s16(outbuffer.data(), buffer.data(), buffer.size());
 
     if (nk_begin(_nk, "", WINDOW_BOUNDS, WINDOW_FLAGS)) {
+        bool anyButton = false;
         nk_layout_space_begin(_nk, NK_STATIC, 500, INT_MAX);
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[3], BUTTON_ROW_Y[0], _auto_button.normal_button->width, _auto_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_auto_button.style, _auto_button.nk_normal_button))
         {
-            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+            anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[4], BUTTON_ROW_Y[0], _auto_button.normal_button->width, _auto_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_auto_button.style, _auto_button.nk_normal_button))
         {
-            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+            anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[1], BUTTON_ROW_Y[1], _wash_button.normal_button->width, _wash_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_wash_button.style, _wash_button.nk_normal_button))
         {
-            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+            anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[5], BUTTON_ROW_Y[1], _wash_button.normal_button->width, _wash_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_wash_button.style, _wash_button.nk_normal_button))
         {
-            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+            anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[0], BUTTON_ROW_Y[2], _standby_button.normal_button->width, _standby_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_standby_button.style, _standby_button.nk_normal_button))
         {
-            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+            anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[6], BUTTON_ROW_Y[2], _standby_button.normal_button->width, _standby_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_standby_button.style, _standby_button.nk_normal_button))
         {
-            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+            anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[1], BUTTON_ROW_Y[3], _topping_button_l.normal_button->width, _topping_button_l.normal_button->height));
         if (nk_button_image_styled(_nk, &_topping_button_l.style, _topping_button_l.nk_normal_button))
         {
-            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+            anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[5], BUTTON_ROW_Y[3], _topping_button_r.normal_button->width, _topping_button_r.normal_button->height));
         if (nk_button_image_styled(_nk, &_topping_button_r.style, _topping_button_r.nk_normal_button))
         {
-            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+            anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[2], BUTTON_ROW_Y[4], _up_button.normal_button->width, _up_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_up_button.style, _up_button.nk_normal_button))
         {
-            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+            anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[3], BUTTON_ROW_Y[5], _down_button.normal_button->width, _down_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_down_button.style, _down_button.nk_normal_button))
         {
-            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+            anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[4], BUTTON_ROW_Y[5], _sel_button.normal_button->width, _sel_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_sel_button.style, _sel_button.nk_normal_button))
         {
-            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+            anyButton = true;
         }
 
+        if (anyButton)
+        {
+            if (!_beepVoice)
+            {
+                _beepVoice = audio_mixer_play(_beepSound, true, 1.0f, "sinc", RESAMPLER_QUALITY_HIGHEST, nullptr);
+            }
+        }
+        else
+        {
+            if (_beepVoice)
+            {
+                audio_mixer_stop(_beepVoice);
+                _beepVoice = nullptr;
+            }
+        }
+
+        nk_layout_space_push(_nk, {LCD_BOUNDS.x, LCD_BOUNDS.y, LCD_BOUNDS.w, (float)_textHeight});
+        nk_label_colored(_nk, "ABCDEFGHIJABCDEFGHIJ", NK_TEXT_ALIGN_LEFT, pntr_color_to_nk_color(PNTR_SKYBLUE));
+        nk_layout_space_push(_nk, {LCD_BOUNDS.x, LCD_BOUNDS.y + _textHeight*3.3f, LCD_BOUNDS.w, (float)_textHeight});
+        nk_label_colored(_nk, "ABCDEFGHIJABCDEFGHIJ", NK_TEXT_ALIGN_LEFT | NK_TEXT_ALIGN_TOP, pntr_color_to_nk_color(PNTR_SKYBLUE));
+        nk_layout_space_push(_nk, {LCD_BOUNDS.x, LCD_BOUNDS.y + _textHeight*6.6f, LCD_BOUNDS.w, (float)_textHeight});
+        nk_label_colored(_nk, "ABCDEFGHIJABCDEFGHIJ", NK_TEXT_ALIGN_LEFT | NK_TEXT_ALIGN_TOP, pntr_color_to_nk_color(PNTR_SKYBLUE));
+        nk_layout_space_push(_nk, {LCD_BOUNDS.x, LCD_BOUNDS.y + _textHeight*9.9f, LCD_BOUNDS.w, (float)_textHeight});
+        nk_label_colored(_nk, "ABCDEFGHIJABCDEFGHIJ", NK_TEXT_ALIGN_LEFT | NK_TEXT_ALIGN_TOP, pntr_color_to_nk_color(PNTR_SKYBLUE));
 
         nk_layout_space_end(_nk);
     }
