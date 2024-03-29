@@ -90,10 +90,7 @@ struct CoreState
         retro_assert(_framebuffer != nullptr);
 
         _nk->style.window.fixed_background.type = NK_STYLE_ITEM_IMAGE;
-        _nk->style.window.fixed_background = {
-            .type = NK_STYLE_ITEM_IMAGE,
-            .data = { .image = _nk_steel_bg }
-        };
+        _nk->style.window.fixed_background.data.image = _nk_steel_bg;
         _nk->style.window.header.padding = {0, 0};
         _nk->style.window.header.spacing = {0, 0};
         _nk->style.window.padding = {0, 0};
