@@ -17,6 +17,10 @@ include:
   - project: 'libretro-infrastructure/ci-templates'
     file: '/windows-cmake-mingw.yml'
 
+  # DOS
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/djgpp-static-cmake.yml'
+
   # Linux 64-bit
   - project: 'libretro-infrastructure/ci-templates'
     file: '/linux-cmake.yml'
@@ -28,6 +32,11 @@ include:
   # MacOS ARM 64-bit
   - project: 'libretro-infrastructure/ci-templates'
     file: '/osx-cmake-arm64.yml'
+
+  # MacOS PPC
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/osx-cmake-ppc.yml'
+
 
   ################################## CELLULAR ################################
   # Android
@@ -42,29 +51,48 @@ include:
   - project: 'libretro-infrastructure/ci-templates'
     file: '/tvos-cmake.yml'
 
-  #################################### MISC ##################################
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/ctr-static-cmake.yml'
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/dingux-cmake.yml'
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/djgpp-static-cmake.yml'
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/emscripten-static-cmake.yml'
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/libnx-static-cmake.yml'
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/ngc-static-cmake.yml'
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/orbis-static-cmake.yml'
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/psp-static-cmake.yml'
+  ################################ GAME CONSOLES #############################
+  # PS2
   - project: 'libretro-infrastructure/ci-templates'
     file: '/ps2-static-cmake.yml'
+
+  # GameCube
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/ngc-static-cmake.yml'
+
+  # PSP
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/psp-static-cmake.yml'
+
+  # Wii
   - project: 'libretro-infrastructure/ci-templates'
     file: '/wii-static-cmake.yml'
+
+  # Wii U
   - project: 'libretro-infrastructure/ci-templates'
     file: '/wiiu-static-cmake.yml'
+
+  # 3DS
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/ctr-static-cmake.yml'
+
+  # Switch
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/libnx-static-cmake.yml'
+
+  #################################### MISC ##################################
+  # Dingux
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/dingux-cmake.yml'
+
+  # Web
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/emscripten-static-cmake.yml'
+
+  # Orbis
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/orbis-static-cmake.yml'
+
 
 # Stages for building
 stages:
@@ -108,6 +136,12 @@ libretro-build-osx-x64:
 libretro-build-osx-arm64:
   extends:
     - .libretro-osx-cmake-arm64
+    - .core-defs
+
+# MacOS PPC
+libretro-osx-cmake-ppc:
+  extends:
+    - .libretro-osx-cmake-ppc
     - .core-defs
 
 # DOS (huh?)
@@ -156,26 +190,11 @@ libretro-build-tvos-arm64:
   variables:
     CORE_ARGS: --toolchain ./cmake/toolchain/ios.toolchain.cmake -DPLATFORM=TVOS
 
+################################ GAME CONSOLES ###############################
 # 3DS
 libretro-ctr-static-cmake:
   extends:
     - .libretro-ctr-static-cmake
-    - .core-defs
-
-# Miyoo
-libretro-dingux-cmake-mips32:
-  extends:
-    - .libretro-dingux-cmake-mips32
-    - .core-defs
-
-libretro-miyoo-cmake-arm32:
-  extends:
-    - .libretro-miyoo-cmake-arm32
-    - .core-defs
-
-libretro-emscripten-static-cmake:
-  extends:
-    - .libretro-emscripten-static-cmake
     - .core-defs
 
 libretro-libnx-static-cmake:
@@ -191,12 +210,6 @@ libretro-ngc-static-cmake:
 libretro-orbis-static-cmake:
   extends:
     - .libretro-orbis-static-cmake
-    - .core-defs
-
-
-libretro-osx-cmake-ppc:
-  extends:
-    - .libretro-osx-cmake-ppc
     - .core-defs
 
 libretro-ps2-static-cmake:
@@ -222,4 +235,23 @@ libretro-wii-static-cmake:
 libretro-wiiu-static-cmake:
   extends:
     - .libretro-wiiu-static-cmake
+    - .core-defs
+
+#################################### MISC ####################################
+
+# Miyoo
+libretro-dingux-cmake-mips32:
+  extends:
+    - .libretro-dingux-cmake-mips32
+    - .core-defs
+
+libretro-miyoo-cmake-arm32:
+  extends:
+    - .libretro-miyoo-cmake-arm32
+    - .core-defs
+
+# Web
+libretro-emscripten-static-cmake:
+  extends:
+    - .libretro-emscripten-static-cmake
     - .core-defs
