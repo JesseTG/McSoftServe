@@ -254,6 +254,13 @@ ngc:
   extends:
     - .libretro-ngc-static-cmake-retroarch-master
     - .core-defs
+  before_script:
+    - export NUMPROC=$(($(nproc)/5))
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy software-properties-common
+    - sudo add-apt-repository -y ppa:savoury1/build-tools
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy cmake
 
 orbis:
   extends:
@@ -264,26 +271,61 @@ ps2:
   extends:
     - .libretro-ps2-static-cmake-retroarch-master
     - .core-defs
+  before_script:
+    - export NUMPROC=$(($(nproc)/5))
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy software-properties-common
+    - sudo add-apt-repository -y ppa:savoury1/build-tools
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy cmake
 
 psp:
   extends:
     - .libretro-psp-static-cmake-retroarch-master
     - .core-defs
+  before_script:
+    - export NUMPROC=$(($(nproc)/5))
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy software-properties-common
+    - sudo add-apt-repository -y ppa:savoury1/build-tools
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy cmake
 
 vita:
   extends:
     - .libretro-vita-static-cmake-retroarch-master
     - .core-defs
+  before_script:
+    - export NUMPROC=$(($(nproc)/5))
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy software-properties-common
+    - sudo add-apt-repository -y ppa:savoury1/build-tools
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy cmake
 
 wii:
   extends:
     - .libretro-vita-static-cmake-retroarch-master
     - .core-defs
+  before_script:
+    - export NUMPROC=$(($(nproc)/5))
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy software-properties-common
+    - sudo add-apt-repository -y ppa:savoury1/build-tools
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy cmake
 
 wiiu:
   extends:
     - .libretro-wiiu-static-cmake-retroarch-master
     - .core-defs
+  before_script:
+    - export NUMPROC=$(($(nproc)/5))
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy software-properties-common
+    - sudo add-apt-repository -y ppa:savoury1/build-tools
+    - sudo apt-get update -qy
+    - sudo apt-get install -qy cmake
 
 #################################### MISC ####################################
 
