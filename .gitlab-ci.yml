@@ -149,7 +149,7 @@ libretro-osx-cmake-ppc:
     - .core-defs
 
 # DOS (huh?)
-libretro-djgpp-static-cmake:
+libretro-djgpp-static-cmake-retroarch-master:
   extends:
     - .libretro-djgpp-static-cmake
     - .core-defs
@@ -196,47 +196,47 @@ libretro-build-tvos-arm64:
 
 ################################ GAME CONSOLES ###############################
 # 3DS
-libretro-ctr-static-cmake:
+libretro-ctr-static-cmake-retroarch-master:
   extends:
     - .libretro-ctr-static-cmake
     - .core-defs
 
-libretro-libnx-static-cmake:
+libretro-libnx-static-cmake-retroarch-master:
   extends:
     - .libretro-libnx-static-cmake
     - .core-defs
 
-libretro-ngc-static-cmake:
+libretro-ngc-static-cmake-retroarch-master:
   extends:
     - .libretro-ngc-static-cmake
     - .core-defs
 
-libretro-orbis-static-cmake:
+libretro-orbis-static-cmake-retroarch-master:
   extends:
     - .libretro-orbis-static-cmake
     - .core-defs
 
-libretro-ps2-static-cmake:
+libretro-ps2-static-cmake-retroarch-master:
   extends:
     - .libretro-ps2-static-cmake
     - .core-defs
 
-libretro-psp-static-cmake:
+libretro-psp-static-cmake-retroarch-master:
   extends:
     - .libretro-psp-static-cmake
     - .core-defs
 
-libretro-vita-static-cmake:
+libretro-vita-static-cmake-retroarch-master:
   extends:
     - .libretro-vita-static-cmake
     - .core-defs
 
-libretro-wii-static-cmake:
+libretro-wii-static-cmake-retroarch-master:
   extends:
     - .libretro-vita-static-cmake
     - .core-defs
 
-libretro-wiiu-static-cmake:
+libretro-wiiu-static-cmake-retroarch-master:
   extends:
     - .libretro-wiiu-static-cmake
     - .core-defs
@@ -255,7 +255,7 @@ libretro-miyoo-cmake-arm32:
     - .core-defs
 
 # Web
-libretro-emscripten-static-cmake:
+libretro-emscripten-static-cmake-retroarch-master:
   extends:
     - .libretro-emscripten-static-cmake-retroarch-master
     - .core-defs
