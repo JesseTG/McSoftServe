@@ -20,6 +20,7 @@ include(cmake/libretro-common.cmake)
 include(embed-binaries)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_STANDARD 99)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_library(mcsoftserve_libretro MODULE
