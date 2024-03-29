@@ -21,7 +21,7 @@ if (ENABLE_SCCACHE)
     endif()
 endif ()
 
-find_package(Threads REQUIRED)
+include(CheckIncludeFile)
 
 if (Threads_FOUND)
     set(HAVE_THREADS ON)
