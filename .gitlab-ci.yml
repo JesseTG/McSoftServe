@@ -12,7 +12,6 @@
 # Inclusion templates, required for the build to work
 include:
   ################################## DESKTOPS ################################
-  # Not supporting 32-bit devices without significant demand
 
   # Windows 64-bit
   - project: 'libretro-infrastructure/ci-templates'
@@ -44,6 +43,28 @@ include:
     file: '/tvos-cmake.yml'
 
   #################################### MISC ##################################
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/ctr-static-cmake.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/dingux-cmake.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/djgpp-static-cmake.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/emscripten-static-cmake.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/libnx-static-cmake.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/ngc-static-cmake.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/orbis-static-cmake.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/psp-static-cmake.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/ps2-static-cmake.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/wii-static-cmake.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/wiiu-static-cmake.yml'
 
 # Stages for building
 stages:
@@ -73,27 +94,26 @@ libretro-build-linux-x64:
     - sudo apt-get update -qy
     - sudo apt-get install -qy software-properties-common
     - sudo add-apt-repository -y ppa:savoury1/build-tools
-    - sudo add-apt-repository -y ppa:savoury1/gcc-defaults-12
     - sudo apt-get update -qy
-    - sudo apt-get install -qy cmake gcc-12 g++-12
-  # This container's existing installations of gcc and CMake are way too old
-  variables:
-    CC: /usr/bin/gcc-12
-    CXX: /usr/bin/g++-12
-    CXXFLAGS: -Wno-deprecated-declarations # Deprecation warnings aren't helpful on the libretro Gitlab
+    - sudo apt-get install -qy cmake
+  # This container's existing installation of CMake is way too old
 
 # MacOS 64-bit
 libretro-build-osx-x64:
   extends:
     - .libretro-osx-cmake-x86_64
     - .core-defs
-  variables:
-    MACOSX_DEPLOYMENT_TARGET: "10.15"
 
 # MacOS ARM 64-bit
 libretro-build-osx-arm64:
   extends:
     - .libretro-osx-cmake-arm64
+    - .core-defs
+
+# DOS (huh?)
+libretro-djgpp-static-cmake:
+  extends:
+    - .libretro-djgpp-static-cmake
     - .core-defs
 
 ################################### CELLULAR #################################
@@ -108,10 +128,6 @@ android-arm64-v8a:
     - echo "deb http://deb.debian.org/debian bullseye-backports main" >> /etc/apt/sources.list
     - apt-get update -qy
     - apt-get install -qy cmake/bullseye-backports
-  variables:
-    CXXFLAGS: -Wno-deprecated-declarations -Wno-unknown-attributes
-    API_LEVEL: 24
-  # The Android runners are based on Debian, not Ubuntu
 
 # Android 64-bit x86
 android-x86_64:
@@ -123,10 +139,6 @@ android-x86_64:
     - echo "deb http://deb.debian.org/debian bullseye-backports main" >> /etc/apt/sources.list
     - apt-get update -qy
     - apt-get install -qy cmake/bullseye-backports
-  variables:
-    CXXFLAGS: -Wno-deprecated-declarations -Wno-unknown-attributes
-    API_LEVEL: 24
-# Not supported; if this doesn't work the first time around, I'm cutting it
 
 # iOS
 libretro-build-ios-arm64:
@@ -134,9 +146,7 @@ libretro-build-ios-arm64:
     - .libretro-ios-cmake-arm64
     - .core-defs
   variables:
-    CORE_ARGS: --toolchain ./cmake/toolchain/ios.toolchain.cmake -DPLATFORM=OS64 -DDEPLOYMENT_TARGET=13
-    IOS_MINVER: "13.0"
-    CXXFLAGS: -Wno-deprecated-declarations -Wno-unknown-attributes
+    CORE_ARGS: --toolchain ./cmake/toolchain/ios.toolchain.cmake -DPLATFORM=OS64
 
 # tvOS
 libretro-build-tvos-arm64:
@@ -144,6 +154,72 @@ libretro-build-tvos-arm64:
     - .libretro-tvos-cmake-arm64
     - .core-defs
   variables:
-    CORE_ARGS: --toolchain ./cmake/toolchain/ios.toolchain.cmake -DPLATFORM=TVOS -DDEPLOYMENT_TARGET=13
-    IOS_MINVER: "13.0"
-    CXXFLAGS: -Wno-deprecated-declarations -Wno-unknown-attributes
+    CORE_ARGS: --toolchain ./cmake/toolchain/ios.toolchain.cmake -DPLATFORM=TVOS
+
+# 3DS
+libretro-ctr-static-cmake:
+  extends:
+    - .libretro-ctr-static-cmake
+    - .core-defs
+
+# Miyoo
+libretro-dingux-cmake-mips32:
+  extends:
+    - .libretro-dingux-cmake-mips32
+    - .core-defs
+
+libretro-miyoo-cmake-arm32:
+  extends:
+    - .libretro-miyoo-cmake-arm32
+    - .core-defs
+
+libretro-emscripten-static-cmake:
+  extends:
+    - .libretro-emscripten-static-cmake
+    - .core-defs
+
+libretro-libnx-static-cmake:
+  extends:
+    - .libretro-libnx-static-cmake
+    - .core-defs
+
+libretro-ngc-static-cmake:
+  extends:
+    - .libretro-ngc-static-cmake
+    - .core-defs
+
+libretro-orbis-static-cmake:
+  extends:
+    - .libretro-orbis-static-cmake
+    - .core-defs
+
+
+libretro-osx-cmake-ppc:
+  extends:
+    - .libretro-osx-cmake-ppc
+    - .core-defs
+
+libretro-ps2-static-cmake:
+  extends:
+    - .libretro-ps2-static-cmake
+    - .core-defs
+
+libretro-psp-static-cmake:
+  extends:
+    - .libretro-psp-static-cmake
+    - .core-defs
+
+libretro-vita-static-cmake:
+  extends:
+    - .libretro-vita-static-cmake
+    - .core-defs
+
+libretro-wii-static-cmake:
+  extends:
+    - .libretro-vita-static-cmake
+    - .core-defs
+
+libretro-wiiu-static-cmake:
+  extends:
+    - .libretro-wiiu-static-cmake
+    - .core-defs
