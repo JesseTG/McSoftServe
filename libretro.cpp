@@ -27,9 +27,12 @@ using std::array;
 constexpr int SAMPLE_RATE = 44100;
 constexpr int SCREEN_WIDTH = 1366;
 constexpr int SCREEN_HEIGHT = 768;
+constexpr int BUTTON_SIZE = 87;
 constexpr int MATTE_PANEL_OFFSET = 70;
 constexpr nk_panel_flags WINDOW_FLAGS = static_cast<nk_panel_flags>(NK_WINDOW_BACKGROUND | NK_WINDOW_NO_SCROLLBAR);
 constexpr struct nk_rect WINDOW_BOUNDS = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+constexpr std::array BUTTON_COLUMN_X = {84, 173, 261, 349, 930, 1107, 1196};
+constexpr std::array BUTTON_ROW_Y = {260, 312, 520, 551, 586, 620};
 
 struct MachineState
 {
@@ -42,9 +45,9 @@ struct CoreState
         _auto_button(embedded_mcsoftserve_auto_button, sizeof(embedded_mcsoftserve_auto_button), PNTR_SKYBLUE, false, false),
         _wash_button(embedded_mcsoftserve_wash_button, sizeof(embedded_mcsoftserve_wash_button), PNTR_SKYBLUE, false, false),
         _standby_button(embedded_mcsoftserve_standby_button, sizeof(embedded_mcsoftserve_standby_button), PNTR_SKYBLUE, false, false),
-        _topping_button_l(embedded_mcsoftserve_topping_button, sizeof(embedded_mcsoftserve_topping_button), PNTR_SKYBLUE, false, false),
-        _topping_button_r(embedded_mcsoftserve_topping_button, sizeof(embedded_mcsoftserve_topping_button), PNTR_SKYBLUE, true, false),
-        _sel_button(embedded_mcsoftserve_sel_button, sizeof(embedded_mcsoftserve_sel_button), PNTR_SKYBLUE, false, false),
+        _topping_button_l(embedded_mcsoftserve_topping_button, sizeof(embedded_mcsoftserve_topping_button), PNTR_PINK, false, false),
+        _topping_button_r(embedded_mcsoftserve_topping_button, sizeof(embedded_mcsoftserve_topping_button), PNTR_PINK, true, false),
+        _sel_button(embedded_mcsoftserve_sel_button, sizeof(embedded_mcsoftserve_sel_button), PNTR_PINK, false, false),
         _up_button(embedded_mcsoftserve_up_button, sizeof(embedded_mcsoftserve_up_button), PNTR_SKYBLUE, false, false),
         _down_button(embedded_mcsoftserve_up_button, sizeof(embedded_mcsoftserve_up_button), PNTR_SKYBLUE, false, true)
     {
@@ -141,6 +144,8 @@ private:
 
             style.normal.type = NK_STYLE_ITEM_IMAGE;
             style.normal.data.image = pntr_image_nk(normal_button);
+            style.hover.type = NK_STYLE_ITEM_IMAGE;
+            style.hover.data.image = pntr_image_nk(normal_button);
             style.active.type = NK_STYLE_ITEM_IMAGE;
             style.active.data.image = pntr_image_nk(active_button);
         }
@@ -382,14 +387,73 @@ void CoreState::Run()
 
     if (nk_begin(_nk, "", WINDOW_BOUNDS, WINDOW_FLAGS)) {
         nk_layout_space_begin(_nk, NK_STATIC, 500, INT_MAX);
-        nk_layout_space_push(_nk, nk_rect(0,0,150,200));
-        if (nk_button_image_styled(_nk, nullptr, {}))
+        nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[3], BUTTON_ROW_Y[0], _auto_button.normal_button->width, _auto_button.normal_button->height));
+        if (nk_button_image_styled(_nk, &_auto_button.style, _auto_button.nk_normal_button))
         {
-
-        }
-        if (nk_button_color(_nk, nk_color{ 255, 0, 0, 255 })) {
             _log(RETRO_LOG_DEBUG, "Button pressed\n");
         }
+
+        nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[4], BUTTON_ROW_Y[0], _auto_button.normal_button->width, _auto_button.normal_button->height));
+        if (nk_button_image_styled(_nk, &_auto_button.style, _auto_button.nk_normal_button))
+        {
+            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+        }
+
+        nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[1], BUTTON_ROW_Y[1], _wash_button.normal_button->width, _wash_button.normal_button->height));
+        if (nk_button_image_styled(_nk, &_wash_button.style, _wash_button.nk_normal_button))
+        {
+            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+        }
+
+        nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[5], BUTTON_ROW_Y[1], _wash_button.normal_button->width, _wash_button.normal_button->height));
+        if (nk_button_image_styled(_nk, &_wash_button.style, _wash_button.nk_normal_button))
+        {
+            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+        }
+
+        nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[0], BUTTON_ROW_Y[2], _standby_button.normal_button->width, _standby_button.normal_button->height));
+        if (nk_button_image_styled(_nk, &_standby_button.style, _standby_button.nk_normal_button))
+        {
+            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+        }
+
+        nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[6], BUTTON_ROW_Y[2], _standby_button.normal_button->width, _standby_button.normal_button->height));
+        if (nk_button_image_styled(_nk, &_standby_button.style, _standby_button.nk_normal_button))
+        {
+            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+        }
+
+        nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[1], BUTTON_ROW_Y[3], _topping_button_l.normal_button->width, _topping_button_l.normal_button->height));
+        if (nk_button_image_styled(_nk, &_topping_button_l.style, _topping_button_l.nk_normal_button))
+        {
+            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+        }
+
+        nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[5], BUTTON_ROW_Y[3], _topping_button_r.normal_button->width, _topping_button_r.normal_button->height));
+        if (nk_button_image_styled(_nk, &_topping_button_r.style, _topping_button_r.nk_normal_button))
+        {
+            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+        }
+
+        nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[2], BUTTON_ROW_Y[4], _up_button.normal_button->width, _up_button.normal_button->height));
+        if (nk_button_image_styled(_nk, &_up_button.style, _up_button.nk_normal_button))
+        {
+            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+        }
+
+        nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[3], BUTTON_ROW_Y[5], _down_button.normal_button->width, _down_button.normal_button->height));
+        if (nk_button_image_styled(_nk, &_down_button.style, _down_button.nk_normal_button))
+        {
+            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+        }
+
+        nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[4], BUTTON_ROW_Y[5], _sel_button.normal_button->width, _sel_button.normal_button->height));
+        if (nk_button_image_styled(_nk, &_sel_button.style, _sel_button.nk_normal_button))
+        {
+            _log(RETRO_LOG_DEBUG, "Button pressed\n");
+        }
+
+
         nk_layout_space_end(_nk);
     }
     nk_end(_nk);
