@@ -12,6 +12,10 @@ project("McSoftServe"
         HOMEPAGE_URL "https://jesse.tg"
         LANGUAGES C CXX)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 include(FetchContent)
 include(CheckSymbolExists)
 include(cmake/FetchDependencies.cmake)
@@ -19,9 +23,6 @@ include(cmake/ConfigureFeatures.cmake)
 include(cmake/libretro-common.cmake)
 include(embed-binaries)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_library(mcsoftserve_libretro MODULE
     libretro.cpp
