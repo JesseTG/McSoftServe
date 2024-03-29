@@ -101,7 +101,10 @@ struct CoreState
         _nk->style.window.group_padding = {0, 0};
         _nk->style.window.border = 0;
 
-
+        _lcd[0] = "NVRAM FAULT";
+        _lcd[1] = "RESET TO DEFAULTS";
+        _lcd[2] = "PRESS SEL KEY";
+        _lcd[3] = "";
     }
 
     ~CoreState() noexcept
@@ -141,6 +144,7 @@ struct CoreState
     const bool initialized = true;
 
     void Run();
+    array<const char*, 4> _lcd = {"", "", "", ""};
 private:
     struct button
     {
@@ -312,8 +316,9 @@ RETRO_API void retro_set_controller_port_device(unsigned, unsigned) {}
 
 RETRO_API void retro_reset(void)
 {
-    // TODO: Reset the game
-    // TODO: Random probability of failure
+    Core._lcd.fill("");
+    Core._lcd[0] = "USER ERROR";
+    Core._lcd[3] = "APRIL FOOLS";
 }
 
 RETRO_API size_t retro_serialize_size(void)
@@ -412,66 +417,94 @@ void CoreState::Run()
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[3], BUTTON_ROW_Y[0], _auto_button.normal_button->width, _auto_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_auto_button.style, _auto_button.nk_normal_button))
         {
+            _lcd.fill("");
+            _lcd[0] = "(L/R) BRL>41F (5C)";
+            _lcd[1] = "AFTER PF";
             anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[4], BUTTON_ROW_Y[0], _auto_button.normal_button->width, _auto_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_auto_button.style, _auto_button.nk_normal_button))
         {
+            _lcd.fill("");
+            _lcd[0] = "BEATER OVERLOAD";
             anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[1], BUTTON_ROW_Y[1], _wash_button.normal_button->width, _wash_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_wash_button.style, _wash_button.nk_normal_button))
         {
+            _lcd.fill("");
+            _lcd[0] = "PRODUCT DOOR OFF";
             anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[5], BUTTON_ROW_Y[1], _wash_button.normal_button->width, _wash_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_wash_button.style, _wash_button.nk_normal_button))
         {
+            _lcd.fill("");
+            _lcd[0] = "HOPPER THERMISTOR";
+            _lcd[1] = "FAIL";
             anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[0], BUTTON_ROW_Y[2], _standby_button.normal_button->width, _standby_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_standby_button.style, _standby_button.nk_normal_button))
         {
+            _lcd.fill("");
+            _lcd[0] = "(L/R) BRL>41F (5C)";
+            _lcd[1] = "AFTER 4 HR";
             anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[6], BUTTON_ROW_Y[2], _standby_button.normal_button->width, _standby_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_standby_button.style, _standby_button.nk_normal_button))
         {
+            _lcd.fill("");
+            _lcd[0] = "(L/R) HPR>41F (5C)";
+            _lcd[1] = "AFTER 4 HR";
             anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[1], BUTTON_ROW_Y[3], _topping_button_l.normal_button->width, _topping_button_l.normal_button->height));
         if (nk_button_image_styled(_nk, &_topping_button_l.style, _topping_button_l.nk_normal_button))
         {
+            _lcd.fill("");
+            _lcd[0] = "HPCO COMPRESSOR";
             anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[5], BUTTON_ROW_Y[3], _topping_button_r.normal_button->width, _topping_button_r.normal_button->height));
         if (nk_button_image_styled(_nk, &_topping_button_r.style, _topping_button_r.nk_normal_button))
         {
+            _lcd.fill("");
+            _lcd[0] = "BARREL THERMISTOR";
+            _lcd[1] = "FAIL";
             anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[2], BUTTON_ROW_Y[4], _up_button.normal_button->width, _up_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_up_button.style, _up_button.nk_normal_button))
         {
+            _lcd.fill("");
+            _lcd[0] = "(L/R) COMP ON";
+            _lcd[1] = "TOO LONG";
             anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[3], BUTTON_ROW_Y[5], _down_button.normal_button->width, _down_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_down_button.style, _down_button.nk_normal_button))
         {
+            _lcd.fill("");
+            _lcd[0] = "(L/R) BRL>59F (15C)";
             anyButton = true;
         }
 
         nk_layout_space_push(_nk, nk_rect(BUTTON_COLUMN_X[4], BUTTON_ROW_Y[5], _sel_button.normal_button->width, _sel_button.normal_button->height));
         if (nk_button_image_styled(_nk, &_sel_button.style, _sel_button.nk_normal_button))
         {
+            _lcd.fill("");
+            _lcd[0] = "NO FAULT FOUND";
             anyButton = true;
         }
 
@@ -491,14 +524,14 @@ void CoreState::Run()
             }
         }
 
-        nk_layout_space_push(_nk, {LCD_BOUNDS.x, LCD_BOUNDS.y, LCD_BOUNDS.w, (float)_textHeight});
-        nk_label_colored(_nk, "ABCDEFGHIJABCDEFGHIJ", NK_TEXT_ALIGN_LEFT, pntr_color_to_nk_color(PNTR_SKYBLUE));
+        nk_layout_space_push(_nk, LCD_BOUNDS);
+        nk_label_colored(_nk, _lcd[0], NK_TEXT_ALIGN_LEFT, pntr_color_to_nk_color(PNTR_SKYBLUE));
         nk_layout_space_push(_nk, {LCD_BOUNDS.x, LCD_BOUNDS.y + _textHeight*3.3f, LCD_BOUNDS.w, (float)_textHeight});
-        nk_label_colored(_nk, "ABCDEFGHIJABCDEFGHIJ", NK_TEXT_ALIGN_LEFT | NK_TEXT_ALIGN_TOP, pntr_color_to_nk_color(PNTR_SKYBLUE));
+        nk_label_colored(_nk, _lcd[1], NK_TEXT_ALIGN_LEFT | NK_TEXT_ALIGN_TOP, pntr_color_to_nk_color(PNTR_SKYBLUE));
         nk_layout_space_push(_nk, {LCD_BOUNDS.x, LCD_BOUNDS.y + _textHeight*6.6f, LCD_BOUNDS.w, (float)_textHeight});
-        nk_label_colored(_nk, "ABCDEFGHIJABCDEFGHIJ", NK_TEXT_ALIGN_LEFT | NK_TEXT_ALIGN_TOP, pntr_color_to_nk_color(PNTR_SKYBLUE));
+        nk_label_colored(_nk, _lcd[2], NK_TEXT_ALIGN_LEFT | NK_TEXT_ALIGN_TOP, pntr_color_to_nk_color(PNTR_SKYBLUE));
         nk_layout_space_push(_nk, {LCD_BOUNDS.x, LCD_BOUNDS.y + _textHeight*9.9f, LCD_BOUNDS.w, (float)_textHeight});
-        nk_label_colored(_nk, "ABCDEFGHIJABCDEFGHIJ", NK_TEXT_ALIGN_LEFT | NK_TEXT_ALIGN_TOP, pntr_color_to_nk_color(PNTR_SKYBLUE));
+        nk_label_colored(_nk, _lcd[3], NK_TEXT_ALIGN_LEFT | NK_TEXT_ALIGN_TOP, pntr_color_to_nk_color(PNTR_SKYBLUE));
 
         nk_layout_space_end(_nk);
     }
