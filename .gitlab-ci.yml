@@ -110,13 +110,13 @@ stages:
 #
 ################################### DESKTOPS #################################
 # Windows 64-bit
-libretro-build-windows-x64:
+windows-x64:
   extends:
     - .libretro-windows-cmake-x86_64
     - .core-defs
 
 # Linux 64-bit
-libretro-build-linux-x64:
+linux-x64:
   extends:
     - .libretro-linux-cmake-x86_64
     - .core-defs
@@ -131,25 +131,25 @@ libretro-build-linux-x64:
   # This container's existing installation of CMake is way too old
 
 # MacOS 64-bit
-libretro-build-osx-x64:
+osx-x64:
   extends:
     - .libretro-osx-cmake-x86_64
     - .core-defs
 
 # MacOS ARM 64-bit
-libretro-build-osx-arm64:
+osx-arm64:
   extends:
     - .libretro-osx-cmake-arm64
     - .core-defs
 
 # MacOS PPC
-libretro-osx-cmake-ppc:
+osx-ppc:
   extends:
     - .libretro-osx-cmake-ppc
     - .core-defs
 
 # DOS (huh?)
-libretro-djgpp-static-cmake-retroarch-master:
+djgpp:
   extends:
     - .libretro-djgpp-static-cmake
     - .core-defs
@@ -179,7 +179,7 @@ android-x86_64:
     - apt-get install -qy cmake/bullseye-backports
 
 # iOS
-libretro-build-ios-arm64:
+ios-arm64:
   extends:
     - .libretro-ios-cmake-arm64
     - .core-defs
@@ -187,7 +187,7 @@ libretro-build-ios-arm64:
     CORE_ARGS: --toolchain ./cmake/toolchain/ios.toolchain.cmake -DPLATFORM=OS64
 
 # tvOS
-libretro-build-tvos-arm64:
+tvos-arm64:
   extends:
     - .libretro-tvos-cmake-arm64
     - .core-defs
@@ -196,47 +196,49 @@ libretro-build-tvos-arm64:
 
 ################################ GAME CONSOLES ###############################
 # 3DS
-libretro-ctr-static-cmake-retroarch-master:
+ctr:
   extends:
     - .libretro-ctr-static-cmake
     - .core-defs
 
-libretro-libnx-static-cmake-retroarch-master:
+# Switch
+libnx:
   extends:
     - .libretro-libnx-static-cmake
     - .core-defs
 
-libretro-ngc-static-cmake-retroarch-master:
+# GameCube
+ngc:
   extends:
     - .libretro-ngc-static-cmake
     - .core-defs
 
-libretro-orbis-static-cmake-retroarch-master:
+orbis:
   extends:
     - .libretro-orbis-static-cmake
     - .core-defs
 
-libretro-ps2-static-cmake-retroarch-master:
+ps2:
   extends:
     - .libretro-ps2-static-cmake
     - .core-defs
 
-libretro-psp-static-cmake-retroarch-master:
+psp:
   extends:
     - .libretro-psp-static-cmake
     - .core-defs
 
-libretro-vita-static-cmake-retroarch-master:
+vita:
   extends:
     - .libretro-vita-static-cmake
     - .core-defs
 
-libretro-wii-static-cmake-retroarch-master:
+wii:
   extends:
     - .libretro-vita-static-cmake
     - .core-defs
 
-libretro-wiiu-static-cmake-retroarch-master:
+wiiu:
   extends:
     - .libretro-wiiu-static-cmake
     - .core-defs
@@ -244,18 +246,18 @@ libretro-wiiu-static-cmake-retroarch-master:
 #################################### MISC ####################################
 
 # Miyoo
-libretro-dingux-cmake-mips32:
+dingux-mips32:
   extends:
     - .libretro-dingux-cmake-mips32
     - .core-defs
 
-libretro-miyoo-cmake-arm32:
+miyoo-arm32:
   extends:
     - .libretro-miyoo-cmake-arm32
     - .core-defs
 
 # Web
-libretro-emscripten-static-cmake-retroarch-master:
+emscripten:
   extends:
     - .libretro-emscripten-static-cmake-retroarch-master
     - .core-defs
