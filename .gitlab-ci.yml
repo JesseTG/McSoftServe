@@ -115,6 +115,12 @@ windows-x64:
     - .libretro-windows-cmake-x86_64
     - .core-defs
 
+# Linux 32-bit
+linux-x86:
+  extends:
+    - .libretro-linux-cmake-x86
+    - .core-defs
+
 # Linux 64-bit
 linux-x64:
   extends:
@@ -142,6 +148,12 @@ osx-arm64:
     - .libretro-osx-cmake-arm64
     - .core-defs
 
+# MacOS 64-bit
+osx-x86:
+  extends:
+    - .libretro-osx-cmake-x86
+    - .core-defs
+
 # MacOS PPC
 osx-ppc:
   extends:
@@ -156,6 +168,12 @@ djgpp:
 
 ################################### CELLULAR #################################
 
+# Android ARMv7a
+android-armeabi-v7a:
+  extends:
+    - .libretro-android-cmake-armeabi-v7a
+    - .core-defs
+
 # Android ARMv8a
 android-arm64-v8a:
   extends:
@@ -166,6 +184,12 @@ android-arm64-v8a:
     - echo "deb http://deb.debian.org/debian bullseye-backports main" >> /etc/apt/sources.list
     - apt-get update -qy
     - apt-get install -qy cmake/bullseye-backports
+
+# Android 32-bit x86
+android-x86:
+  extends:
+    - .libretro-android-cmake-x86
+    - .core-defs
 
 # Android 64-bit x86
 android-x86_64:
@@ -185,6 +209,11 @@ ios-arm64:
     - .core-defs
   variables:
     CORE_ARGS: --toolchain ./cmake/toolchain/ios.toolchain.cmake -DPLATFORM=OS64
+
+ios9:
+  extends:
+    - .libretro-ios-cmake-ios9
+    - .core-defs
 
 # tvOS
 tvos-arm64:
@@ -245,10 +274,24 @@ wiiu:
 
 #################################### MISC ####################################
 
-# Miyoo
 dingux-mips32:
   extends:
     - .libretro-dingux-cmake-mips32
+    - .core-defs
+
+dingux-odbeta-mips32:
+  extends:
+    - .libretro-dingux-odbeta-cmake-mips32
+    - .core-defs
+
+rs90-mips32:
+  extends:
+    - .libretro-rs90-odbeta-cmake-mips32
+    - .core-defs
+
+retrofw-mips32:
+  extends:
+    - .libretro-retrofw-odbeta-cmake-mips32
     - .core-defs
 
 miyoo-arm32:
