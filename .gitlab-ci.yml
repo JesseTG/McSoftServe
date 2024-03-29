@@ -64,6 +64,10 @@ include:
   - project: 'libretro-infrastructure/ci-templates'
     file: '/psp-static-cmake.yml'
 
+  # PS Vita
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/vita-static-cmake.yml'
+
   # Wii
   - project: 'libretro-infrastructure/ci-templates'
     file: '/wii-static-cmake.yml'
