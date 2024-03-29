@@ -72,7 +72,7 @@ embed_binaries(libretro-assets
         PATH "assets/bg.png"
     ASSET
         NAME "mcsoftserve_lcd_font"
-        PATH "assets/enhanced_led_board-7.ttf"
+        PATH "assets/DOTMATRI.TTF"
 )
 
 
