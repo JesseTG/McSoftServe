@@ -257,5 +257,5 @@ libretro-miyoo-cmake-arm32:
 # Web
 libretro-emscripten-static-cmake:
   extends:
-    - .libretro-emscripten-static-cmake
+    - .libretro-emscripten-static-cmake-retroarch-master
     - .core-defs
