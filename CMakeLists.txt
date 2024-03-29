@@ -44,6 +44,9 @@ embed_binaries(libretro-assets
         NAME "mcsoftserve_freezer"
         PATH "assets/freezer.wav"
     ASSET
+        NAME "mcsoftserve_beep"
+        PATH "assets/beep.wav"
+    ASSET
         NAME "mcsoftserve_bg"
         PATH "assets/bg.png"
     ASSET

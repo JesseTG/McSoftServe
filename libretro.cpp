@@ -21,6 +21,7 @@
 #include <embedded/mcsoftserve_topping_button.h>
 #include <embedded/mcsoftserve_sel_button.h>
 #include <embedded/mcsoftserve_up_button.h>
+#include <embedded/mcsoftserve_beep.h>
 
 using std::array;
 
@@ -59,6 +60,14 @@ struct CoreState
             RESAMPLER_QUALITY_HIGHEST
         );
         retro_assert(_freezerSound != nullptr);
+
+        _beepSound = audio_mixer_load_wav(
+            (void*)embedded_mcsoftserve_beep,
+            sizeof(embedded_mcsoftserve_beep),
+            "sinc",
+            RESAMPLER_QUALITY_HIGHEST
+        );
+        retro_assert(_beepSound != nullptr);
 
         _freezerVoice = audio_mixer_play(_freezerSound, true, 1.0f, "sinc", RESAMPLER_QUALITY_HIGHEST, nullptr);
         retro_assert(_freezerVoice != nullptr);
@@ -109,6 +118,9 @@ struct CoreState
 
         audio_mixer_stop(_freezerVoice);
         _freezerVoice = nullptr;
+
+        audio_mixer_destroy(_beepSound);
+        _beepSound = nullptr;
 
         audio_mixer_destroy(_freezerSound);
         _freezerSound = nullptr;
@@ -167,6 +179,7 @@ private:
 
     audio_mixer_sound_t* _freezerSound = nullptr;
     audio_mixer_voice_t* _freezerVoice = nullptr;
+    audio_mixer_sound_t* _beepSound = nullptr;
     pntr_font* _font = nullptr;
     nk_context* _nk = nullptr;
 
