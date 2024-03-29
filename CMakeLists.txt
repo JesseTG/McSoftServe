@@ -47,6 +47,27 @@ embed_binaries(libretro-assets
         NAME "mctaylor_bg"
         PATH "assets/bg.png"
     ASSET
+        NAME "mcsoftserve_auto_button"
+        PATH "assets/auto-button-l.png"
+    ASSET
+        NAME "mcsoftserve_sel_button"
+        PATH "assets/sel-button.png"
+    ASSET
+        NAME "mcsoftserve_up_button"
+        PATH "assets/up-button.png"
+    ASSET
+        NAME "mctaylor_topping_button"
+        PATH "assets/topping-button-l.png"
+    ASSET
+        NAME "mcsoftserve_wash_button"
+        PATH "assets/wash-button-l.png"
+    ASSET
+        NAME "mcsoftserve_standby_button"
+        PATH "assets/standby-button-l.png"
+    ASSET
+        NAME "mctaylor_bg"
+        PATH "assets/bg.png"
+    ASSET
         NAME "mctaylor_lcd_font"
         PATH "assets/enhanced_led_board-7.ttf"
 )
