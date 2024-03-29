@@ -33,8 +33,8 @@ constexpr int MATTE_PANEL_OFFSET = 70;
 constexpr nk_panel_flags WINDOW_FLAGS = static_cast<nk_panel_flags>(NK_WINDOW_BACKGROUND | NK_WINDOW_NO_SCROLLBAR);
 constexpr struct nk_rect WINDOW_BOUNDS = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 constexpr struct nk_rect LCD_BOUNDS = {519, 320, 330, 132};
-constexpr std::array BUTTON_COLUMN_X = {84, 173, 261, 349, 930, 1107, 1196};
-constexpr std::array BUTTON_ROW_Y = {260, 312, 520, 551, 586, 620};
+constexpr std::array<int, 7> BUTTON_COLUMN_X = {84, 173, 261, 349, 930, 1107, 1196};
+constexpr std::array<int, 6> BUTTON_ROW_Y = {260, 312, 520, 551, 586, 620};
 constexpr int FONT_SIZE = 34;
 
 struct MachineState
@@ -144,7 +144,7 @@ struct CoreState
     const bool initialized = true;
 
     void Run();
-    array<const char*, 4> _lcd = {"", "", "", ""};
+    array<const char*, 4> _lcd = {{"", "", "", ""}};
 private:
     struct button
     {
