@@ -115,6 +115,12 @@ windows-x64:
     - .libretro-windows-cmake-x86_64
     - .core-defs
 
+# Windows 64-bit
+windows-x86:
+  extends:
+    - .libretro-windows-cmake-x86
+    - .core-defs
+
 # Linux 32-bit
 linux-x86:
   extends:
