@@ -85,6 +85,17 @@ target_include_directories(mcsoftserve_libretro SYSTEM PUBLIC
 # libretro cores do not start with "lib"
 set_target_properties(mcsoftserve_libretro PROPERTIES PREFIX "")
 
+# Some platforms or compilers don't use the expected suffixes for shared libraries
+if (APPLE)
+    set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX ".dylib")
+elseif(ANDROID)
+    set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX "_android.so")
+elseif (UNIX)
+    set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX ".so")
+elseif (WIN32)
+    set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX ".dll")
+endif ()
+
 if (WIN32 AND MINGW)
     target_link_options(mcsoftserve_libretro PUBLIC -static-libgcc -static-libstdc++ -static)
 endif()
