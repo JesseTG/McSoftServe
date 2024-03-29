@@ -12,13 +12,13 @@
 #include <audio/audio_mixer.h>
 #include <audio/conversion/float_to_s16.h>
 
-#include <embedded/mctaylor_freezer.h>
-#include <embedded/mctaylor_bg.h>
-#include <embedded/mctaylor_lcd_font.h>
+#include <embedded/mcsoftserve_freezer.h>
+#include <embedded/mcsoftserve_bg.h>
+#include <embedded/mcsoftserve_lcd_font.h>
 #include <embedded/mcsoftserve_auto_button.h>
 #include <embedded/mcsoftserve_wash_button.h>
 #include <embedded/mcsoftserve_standby_button.h>
-#include <embedded/mctaylor_topping_button.h>
+#include <embedded/mcsoftserve_topping_button.h>
 #include <embedded/mcsoftserve_sel_button.h>
 #include <embedded/mcsoftserve_up_button.h>
 
@@ -42,16 +42,16 @@ struct CoreState
         _auto_button(embedded_mcsoftserve_auto_button, sizeof(embedded_mcsoftserve_auto_button), PNTR_SKYBLUE, false, false),
         _wash_button(embedded_mcsoftserve_wash_button, sizeof(embedded_mcsoftserve_wash_button), PNTR_SKYBLUE, false, false),
         _standby_button(embedded_mcsoftserve_standby_button, sizeof(embedded_mcsoftserve_standby_button), PNTR_SKYBLUE, false, false),
-        _topping_button_l(embedded_mctaylor_topping_button, sizeof(embedded_mctaylor_topping_button), PNTR_SKYBLUE, false, false),
-        _topping_button_r(embedded_mctaylor_topping_button, sizeof(embedded_mctaylor_topping_button), PNTR_SKYBLUE, true, false),
+        _topping_button_l(embedded_mcsoftserve_topping_button, sizeof(embedded_mcsoftserve_topping_button), PNTR_SKYBLUE, false, false),
+        _topping_button_r(embedded_mcsoftserve_topping_button, sizeof(embedded_mcsoftserve_topping_button), PNTR_SKYBLUE, true, false),
         _sel_button(embedded_mcsoftserve_sel_button, sizeof(embedded_mcsoftserve_sel_button), PNTR_SKYBLUE, false, false),
         _up_button(embedded_mcsoftserve_up_button, sizeof(embedded_mcsoftserve_up_button), PNTR_SKYBLUE, false, false),
         _down_button(embedded_mcsoftserve_up_button, sizeof(embedded_mcsoftserve_up_button), PNTR_SKYBLUE, false, true)
     {
         audio_mixer_init(SAMPLE_RATE);
         _freezerSound = audio_mixer_load_wav(
-            (void*)embedded_mctaylor_freezer,
-            sizeof(embedded_mctaylor_freezer),
+            (void*)embedded_mcsoftserve_freezer,
+            sizeof(embedded_mcsoftserve_freezer),
             "sinc",
             RESAMPLER_QUALITY_HIGHEST
         );
@@ -60,7 +60,7 @@ struct CoreState
         _freezerVoice = audio_mixer_play(_freezerSound, true, 1.0f, "sinc", RESAMPLER_QUALITY_HIGHEST, nullptr);
         retro_assert(_freezerVoice != nullptr);
 
-        _font = pntr_load_font_ttf_from_memory(embedded_mctaylor_lcd_font, sizeof(embedded_mctaylor_lcd_font), 32);
+        _font = pntr_load_font_ttf_from_memory(embedded_mcsoftserve_lcd_font, sizeof(embedded_mcsoftserve_lcd_font), 32);
         retro_assert(_font != nullptr);
 
         _nk = pntr_load_nuklear(_font);
@@ -68,7 +68,7 @@ struct CoreState
 
         // pntr_load_image_from_memory detects the image type from the data,
         // so I'm leaving it as PNTR_IMAGE_TYPE_UNKNOWN
-        _steel_bg = pntr_load_image_from_memory(PNTR_IMAGE_TYPE_UNKNOWN, embedded_mctaylor_bg, sizeof(embedded_mctaylor_bg));
+        _steel_bg = pntr_load_image_from_memory(PNTR_IMAGE_TYPE_UNKNOWN, embedded_mcsoftserve_bg, sizeof(embedded_mcsoftserve_bg));
         retro_assert(_steel_bg != nullptr);
         _nk_steel_bg = pntr_image_nk(_steel_bg);
         _framebuffer = pntr_new_image(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -267,7 +267,7 @@ RETRO_API unsigned retro_api_version()
 
 RETRO_API void retro_get_system_info(retro_system_info *info)
 {
-    info->library_name = "McTaylor";
+    info->library_name = "McSoftServe";
     info->block_extract = false;
 }
 

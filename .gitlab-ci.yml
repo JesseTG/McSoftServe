@@ -7,7 +7,7 @@
 # Core definitions
 .core-defs:
   variables:
-    CORENAME: mctaylor
+    CORENAME: mcsoftserve
 
 # Inclusion templates, required for the build to work
 include:

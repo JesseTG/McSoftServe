@@ -6,7 +6,7 @@ if (CMAKE_MESSAGE_LOG_LEVEL)
     message(STATUS "Message log level is set to ${CMAKE_MESSAGE_LOG_LEVEL}")
 endif ()
 
-project("McTaylor"
+project("McSoftServe"
         VERSION "1.0.0"
         DESCRIPTION "An experimental libretro core for the Taylor series of soft-serve ice cream machines, popularized by a well-known American fast food chain. Provides an accurate user experience without the need for firmware dumps."
         HOMEPAGE_URL "https://jesse.tg"
@@ -22,12 +22,12 @@ include(embed-binaries)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-add_library(mctaylor_libretro MODULE
+add_library(mcsoftserve_libretro MODULE
     libretro.cpp
     pntr/pntr.c
 )
 
-add_common_definitions(mctaylor_libretro)
+add_common_definitions(mcsoftserve_libretro)
 add_common_definitions(libretro-common)
 
 add_compile_definitions(
@@ -41,10 +41,10 @@ add_compile_definitions(
 
 embed_binaries(libretro-assets
     ASSET
-        NAME "mctaylor_freezer"
+        NAME "mcsoftserve_freezer"
         PATH "assets/freezer.wav"
     ASSET
-        NAME "mctaylor_bg"
+        NAME "mcsoftserve_bg"
         PATH "assets/bg.png"
     ASSET
         NAME "mcsoftserve_auto_button"
@@ -56,7 +56,7 @@ embed_binaries(libretro-assets
         NAME "mcsoftserve_up_button"
         PATH "assets/up-button.png"
     ASSET
-        NAME "mctaylor_topping_button"
+        NAME "mcsoftserve_topping_button"
         PATH "assets/topping-button-l.png"
     ASSET
         NAME "mcsoftserve_wash_button"
@@ -65,48 +65,48 @@ embed_binaries(libretro-assets
         NAME "mcsoftserve_standby_button"
         PATH "assets/standby-button-l.png"
     ASSET
-        NAME "mctaylor_bg"
+        NAME "mcsoftserve_bg"
         PATH "assets/bg.png"
     ASSET
-        NAME "mctaylor_lcd_font"
+        NAME "mcsoftserve_lcd_font"
         PATH "assets/enhanced_led_board-7.ttf"
 )
 
 
-target_include_directories(mctaylor_libretro SYSTEM PUBLIC
+target_include_directories(mcsoftserve_libretro SYSTEM PUBLIC
     "${libretro-common_SOURCE_DIR}/include"
     "${pntr_SOURCE_DIR}"
     "${pntr_nuklear_SOURCE_DIR}/include"
 )
 
 # libretro cores do not start with "lib"
-set_target_properties(mctaylor_libretro PROPERTIES PREFIX "")
+set_target_properties(mcsoftserve_libretro PROPERTIES PREFIX "")
 
 # Some platforms or compilers don't use the expected suffixes for shared libraries
 if (APPLE)
-    set_target_properties(mctaylor_libretro PROPERTIES SUFFIX ".dylib")
+    set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX ".dylib")
 elseif(ANDROID)
-    set_target_properties(mctaylor_libretro PROPERTIES SUFFIX "_android.so")
+    set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX "_android.so")
 elseif (UNIX)
-    set_target_properties(mctaylor_libretro PROPERTIES SUFFIX ".so")
+    set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX ".so")
 elseif (WIN32)
-    set_target_properties(mctaylor_libretro PROPERTIES SUFFIX ".dll")
+    set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX ".dll")
 endif ()
 
 if (WIN32 AND MINGW)
-    target_link_options(mctaylor_libretro PUBLIC -static-libgcc -static-libstdc++ -static)
+    target_link_options(mcsoftserve_libretro PUBLIC -static-libgcc -static-libstdc++ -static)
 endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "(.+)?Clang")
-    target_compile_options(mctaylor_libretro PUBLIC -Werror=return-type)
+    target_compile_options(mcsoftserve_libretro PUBLIC -Werror=return-type)
     # For some reason, C++ allows functions to not return values in all code paths.
     # This has tripped me up before, so I'm forcing it to be an error.
 endif()
 
-target_link_libraries(mctaylor_libretro PUBLIC libretro-common pntr pntr_nuklear libretro-assets)
+target_link_libraries(mcsoftserve_libretro PUBLIC libretro-common pntr pntr_nuklear libretro-assets)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message(STATUS "Defining DEBUG in mctaylor_libretro and libretro-common targets")
-    target_compile_definitions(mctaylor_libretro PUBLIC DEBUG)
+    message(STATUS "Defining DEBUG in mcsoftserve_libretro and libretro-common targets")
+    target_compile_definitions(mcsoftserve_libretro PUBLIC DEBUG)
     target_compile_definitions(libretro-common PUBLIC DEBUG)
 endif ()
