@@ -89,8 +89,10 @@ target_include_directories(mcsoftserve_libretro SYSTEM PUBLIC
 set_target_properties(mcsoftserve_libretro PROPERTIES PREFIX "")
 
 # Some platforms or compilers don't use the expected suffixes for shared libraries
-if (LIBRETRO_SUFFIX)
-    set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX "${LIBRETRO_SUFFIX}${CMAKE_LINK_LIBRARY_SUFFIX}")
+if (LIBRETRO_SUFFIX AND LIBRETRO_STATIC)
+    set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX "${LIBRETRO_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+elseif (LIBRETRO_SUFFIX)
+    set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX "${LIBRETRO_SUFFIX}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 elseif (APPLE)
     set_target_properties(mcsoftserve_libretro PROPERTIES SUFFIX ".dylib")
 elseif(ANDROID)
