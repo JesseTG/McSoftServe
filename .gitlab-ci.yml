@@ -242,6 +242,13 @@ ctr:
   extends:
     - .libretro-ctr-static-cmake-retroarch-master
     - .core-defs
+  before_script:
+    - export NUMPROC=$(($(nproc)/5))
+    - apt-get update -qy
+    - apt-get install -qy software-properties-common
+    - add-apt-repository -y ppa:savoury1/build-tools
+    - apt-get update -qy
+    - apt-get install -qy cmake
 
 # Switch
 libnx:
