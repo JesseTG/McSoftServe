@@ -8,7 +8,7 @@ endif ()
 
 project("McSoftServe"
         VERSION "1.0.0"
-        DESCRIPTION "An experimental libretro core for the Taylor series of soft-serve ice cream machines, popularized by a well-known American fast food chain. Provides an accurate user experience without the need for firmware dumps."
+        DESCRIPTION "An experimental libretro core for the Taylor C713 soft-serve ice cream machine, popularized by a well-known American fast food chain. Provides an accurate user experience without the need for firmware dumps."
         HOMEPAGE_URL "https://jesse.tg"
         LANGUAGES C CXX)
 
