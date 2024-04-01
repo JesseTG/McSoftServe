@@ -166,19 +166,6 @@ osx-ppc:
     - .libretro-osx-cmake-ppc
     - .core-defs
 
-# DOS (huh?)
-djgpp:
-  extends:
-    - .libretro-djgpp-static-cmake-retroarch-master
-    - .core-defs
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy software-properties-common
-    - sudo add-apt-repository -y ppa:savoury1/build-tools
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy cmake
-
 ################################### CELLULAR #################################
 
 # Android ARMv7a
@@ -237,102 +224,12 @@ tvos-arm64:
     CORE_ARGS: --toolchain ./cmake/toolchain/ios.toolchain.cmake -DPLATFORM=TVOS
 
 ################################ GAME CONSOLES ###############################
-# 3DS
-ctr:
-  extends:
-    - .libretro-ctr-static-cmake-retroarch-master
-    - .core-defs
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - apt-get update -qy
-    - apt-get install -qy software-properties-common
-    - add-apt-repository -y ppa:savoury1/build-tools
-    - apt-get update -qy
-    - apt-get install -qy cmake
 
 # Switch
 libnx:
   extends:
     - .libretro-libnx-static-cmake-retroarch-master
     - .core-defs
-
-# GameCube
-ngc:
-  extends:
-    - .libretro-ngc-static-cmake-retroarch-master
-    - .core-defs
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy software-properties-common
-    - sudo add-apt-repository -y ppa:savoury1/build-tools
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy cmake
-
-orbis:
-  extends:
-    - .libretro-orbis-static-cmake-retroarch-master
-    - .core-defs
-
-ps2:
-  extends:
-    - .libretro-ps2-static-cmake-retroarch-master
-    - .core-defs
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy software-properties-common
-    - sudo add-apt-repository -y ppa:savoury1/build-tools
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy cmake
-
-psp:
-  extends:
-    - .libretro-psp-static-cmake-retroarch-master
-    - .core-defs
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy software-properties-common
-    - sudo add-apt-repository -y ppa:savoury1/build-tools
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy cmake
-
-vita:
-  extends:
-    - .libretro-vita-static-cmake-retroarch-master
-    - .core-defs
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy software-properties-common
-    - sudo add-apt-repository -y ppa:savoury1/build-tools
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy cmake
-
-wii:
-  extends:
-    - .libretro-vita-static-cmake-retroarch-master
-    - .core-defs
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy software-properties-common
-    - sudo add-apt-repository -y ppa:savoury1/build-tools
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy cmake
-
-wiiu:
-  extends:
-    - .libretro-wiiu-static-cmake-retroarch-master
-    - .core-defs
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy software-properties-common
-    - sudo add-apt-repository -y ppa:savoury1/build-tools
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy cmake
 
 #################################### MISC ####################################
 
