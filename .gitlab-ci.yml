@@ -132,15 +132,7 @@ linux-x64:
   extends:
     - .libretro-linux-cmake-x86_64
     - .core-defs
-  image: $CI_SERVER_HOST:5050/libretro-infrastructure/libretro-build-amd64-ubuntu:latest
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy software-properties-common
-    - sudo add-apt-repository -y ppa:savoury1/build-tools
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy cmake
-  # This container's existing installation of CMake is way too old
+  image: $CI_SERVER_HOST:5050/libretro-infrastructure/libretro-build-amd64-ubuntu:backports
 
 # MacOS 64-bit
 osx-x64:
@@ -179,10 +171,6 @@ android-arm64-v8a:
   extends:
     - .libretro-android-cmake-arm64-v8a
     - .core-defs
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - /android-sdk-linux/cmdline-tools/latest/bin/sdkmanager "cmake;3.30.3"
-    - export PATH=/android-sdk-linux/cmake/3.30.3/bin:$PATH
 
 # Android 32-bit x86
 android-x86:
@@ -195,10 +183,6 @@ android-x86_64:
   extends:
     - .libretro-android-cmake-x86_64
     - .core-defs
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - /android-sdk-linux/cmdline-tools/latest/bin/sdkmanager "cmake;3.30.3"
-    - export PATH=/android-sdk-linux/cmake/3.30.3/bin:$PATH
 
 # iOS
 ios-arm64:
@@ -261,10 +245,3 @@ emscripten:
   extends:
     - .libretro-emscripten-static-cmake-retroarch-master
     - .core-defs
-  before_script:
-    - export NUMPROC=$(($(nproc)/5))
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy software-properties-common
-    - sudo add-apt-repository -y ppa:savoury1/build-tools
-    - sudo apt-get update -qy
-    - sudo apt-get install -qy cmake
