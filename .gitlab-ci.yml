@@ -142,6 +142,13 @@ linux-x64:
     - sudo apt-get install -qy cmake
   # This container's existing installation of CMake is way too old
 
+# Linux ARM 64-bit
+libretro-build-linux-aarch64:
+  extends:
+    - .libretro-linux-cmake-aarch64
+    - .core-defs
+  # The aarch64 image already ships a recent CMake, so no PPA dance is needed here
+
 # MacOS 64-bit
 osx-x64:
   extends:
